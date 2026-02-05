@@ -59,6 +59,17 @@ pipeline {
                 }
             }
         }
+        stage("Quality Gate Check") {
+            steps {
+                script {
+                    // Pause the pipeline and wait for the quality gate status
+                    def qualityGateStatus = waitForQualityGate abortPipeline: true
+                    if (qualityGateStatus.status != 'OK') {
+                        error "Pipeline aborted due to quality gate failure: ${qualityGateStatus.status}"
+                    }
+                }
+            }
+        }
         stage ('Build Docker image') {
             steps {
                 script {
