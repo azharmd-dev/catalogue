@@ -62,14 +62,34 @@ pipeline {
         stage("Quality Gate Check") {
             steps {
                 script {
-                    // Pause the pipeline and wait for the quality gate status
-                    def qualityGateStatus = waitForQualityGate abortPipeline: true
-                    if (qualityGateStatus.status != 'OK') {
+                    // Wait for SonarQube quality gate result
+                    def qualityGateStatus = waitForQualityGate abortPipeline: false
+
+                    echo "=================================="
+                    echo "SonarQube Quality Gate Status: ${qualityGateStatus.status}"
+                    echo "=================================="
+
+                    if (qualityGateStatus.status == 'OK') {
+                        echo "✅ Sonar Scan PASSED"
+                    } else {
+                        echo "❌ Sonar Scan FAILED"
                         error "Pipeline aborted due to quality gate failure: ${qualityGateStatus.status}"
                     }
                 }
             }
         }
+
+        // stage("Quality Gate Check") {
+        //     steps {
+        //         script {
+        //             // Pause the pipeline and wait for the quality gate status
+        //             def qualityGateStatus = waitForQualityGate abortPipeline: true
+        //             if (qualityGateStatus.status != 'OK') {
+        //                 error "Pipeline aborted due to quality gate failure: ${qualityGateStatus.status}"
+        //             }
+        //         }
+        //     }
+        // }
         stage ('Build Docker image') {
             steps {
                 script {
