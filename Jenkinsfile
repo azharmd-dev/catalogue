@@ -55,10 +55,10 @@ pipeline {
                 script {
                     withSonarQubeEnv('sonar-server') {
                         sh "${scannerHome}/bin/sonar-scanner"       
+                     }
                 }
             }
         }
-
         stage ('Build Docker image') {
             steps {
                 script {
