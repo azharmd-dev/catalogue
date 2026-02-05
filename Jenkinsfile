@@ -110,7 +110,7 @@ pipeline {
                 script {
                     sh  """
                     echo "Testing is Success"
-                    sleep 2
+                    sleep 1
                 """
                 }
             }
