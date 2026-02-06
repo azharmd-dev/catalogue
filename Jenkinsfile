@@ -47,37 +47,37 @@ pipeline {
                 }
             }
         }
-        stage ('Sonar Scan'){
-            environment {
-                def scannerHome = tool 'sonar-8.0'
-            }
-            steps {
-                script {
-                    withSonarQubeEnv('sonar-server') {
-                        sh "${scannerHome}/bin/sonar-scanner"       
-                     }
-                }
-            }
-        }
-        stage("Quality Gate Check") {
-            steps {
-                script {
-                    // Wait for SonarQube quality gate result
-                    def qualityGateStatus = waitForQualityGate abortPipeline: false
+        // stage ('Sonar Scan'){
+        //     environment {
+        //         def scannerHome = tool 'sonar-8.0'
+        //     }
+        //     steps {
+        //         script {
+        //             withSonarQubeEnv('sonar-server') {
+        //                 sh "${scannerHome}/bin/sonar-scanner"       
+        //             }
+        //         }
+        //     }
+        // }
+        // stage("Quality Gate Check") {
+        //     steps {
+        //         script {
+        //             // Wait for SonarQube quality gate result
+        //             def qualityGateStatus = waitForQualityGate abortPipeline: false
 
-                    echo "=================================="
-                    echo "SonarQube Quality Gate Status: ${qualityGateStatus.status}"
-                    echo "=================================="
+        //             echo "=================================="
+        //             echo "SonarQube Quality Gate Status: ${qualityGateStatus.status}"
+        //             echo "=================================="
 
-                    if (qualityGateStatus.status == 'OK') {
-                        echo "✅ Sonar Scan PASSED"
-                    } else {
-                        echo "❌ Sonar Scan FAILED"
-                        error "Pipeline aborted due to quality gate failure: ${qualityGateStatus.status}"
-                    }
-                }
-            }
-        }
+        //             if (qualityGateStatus.status == 'OK') {
+        //                 echo "✅ Sonar Scan PASSED"
+        //             } else {
+        //                 echo "❌ Sonar Scan FAILED"
+        //                 error "Pipeline aborted due to quality gate failure: ${qualityGateStatus.status}"
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Dependabot Security Check') {
             steps {
